@@ -57,7 +57,7 @@ python src/readiness_model.py
 ## Project Structure
 
 ```md
-bioperformance-ml/
+bioperformance/
 ├── data/                  # Generated CSV data (ignored in git)
 ├── src/                   # Source code modules
 │   ├── data_synthesis.py  # Synthetic data generator
