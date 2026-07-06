@@ -13,6 +13,7 @@ env/
 
 # Data files (keep repo lightweight, data is generated locally)
 data/*.csv
+data/*.png
 
 # OS generated files
 .DS_Store
