@@ -5,11 +5,13 @@ import shap
 import matplotlib.pyplot as plt
 
 def run_shap_analysis():
-    # 1. Load and prepare data (Same as readiness_model.py)
-    print("Loading data...")
-    df = pd.read_csv('data/processed_features.csv', parse_dates=['date'])
+    feature_path = 'data/processed/features.csv'
+    print(f"Loading data from: {feature_path}")
+    df = pd.read_csv(feature_path, parse_dates=['date'])
     
     drop_cols = ['date', 'athlete_id', 'target_hooper_tomorrow', 
+                 'target_fatigue_tomorrow', 'target_soreness_tomorrow', 
+                 'target_mood_tomorrow', 'target_sleep_quality_tomorrow',
                  'fatigue', 'soreness', 'mood', 'sleep_quality', 'srpe']
     
     df_sorted = df.sort_values('date').reset_index(drop=True)
@@ -36,8 +38,8 @@ def run_shap_analysis():
     plt.figure()
     shap.plots.beeswarm(shap_values, show=False)
     plt.tight_layout()
-    plt.savefig('data/shap_beeswarm_global.png')
-    print("Saved global plot to data/shap_beeswarm_global.png")
+    plt.savefig('data/processed/shap_beeswarm_global.png')
+    print("Saved global plot to data/processed/shap_beeswarm_global.png")
     
     # 5. Local Explainability (Waterfall Plot for a single prediction)
     # Let's look at the first prediction in the test set
@@ -49,8 +51,8 @@ def run_shap_analysis():
     plt.figure()
     shap.plots.waterfall(shap_values[instance_idx], show=False)
     plt.tight_layout()
-    plt.savefig('data/shap_waterfall_local.png')
-    print("Saved local waterfall plot to data/shap_waterfall_local.png")
+    plt.savefig('data/processed/shap_waterfall_local.png')
+    print("Saved local waterfall plot to data/processed/shap_waterfall_local.png")
     
     # 6. Extract Top 3 Drivers for LLM Synthesis
     print("\n--- Top 3 SHAP Drivers for this Prediction ---")
@@ -68,8 +70,11 @@ def run_shap_analysis():
     top_drivers = shap_df.sort_values('abs_shap', ascending=False).head(3)
     
     for feature_name, row in top_drivers.iterrows():
-        direction = "increased" if row['shap_value'] > 0 else "decreased"
-        print(f"- {feature_name} (value: {row['feature_value']:.1f}) {direction} readiness by {abs(row['shap_value']):.2f} points")
+        if row['shap_value'] > 0:
+            effect = f"increased Hooper by {abs(row['shap_value']):.2f} pts (worse readiness)"
+        else:
+            effect = f"decreased Hooper by {abs(row['shap_value']):.2f} pts (better readiness)"
+        print(f"- {feature_name} (value: {row['feature_value']:.1f}) {effect}")
 
 if __name__ == "__main__":
     run_shap_analysis()
