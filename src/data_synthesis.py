@@ -44,5 +44,5 @@ if __name__ == "__main__":
         all_data.append(generate_athlete_data(athlete_id=i, start_date=start, days=90))
     
     df = pd.concat(all_data, ignore_index=True)
-    df.to_csv('data/synthetic_athlete_data.csv', index=False)
-    print("Generated synthetic data for 5 athletes. Saved to data/synthetic_athlete_data.csv")
+    df.to_csv('data/synthetic/synthetic_athlete_data.csv', index=False)
+    print("Generated synthetic data for 5 athletes. Saved to data/synthetic/synthetic_athlete_data.csv")
