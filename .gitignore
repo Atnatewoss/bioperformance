@@ -11,9 +11,11 @@ env/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Data files (keep repo lightweight, data is generated locally)
-data/*.csv
-data/*.png
+# Data files (keep repo lightweight, data is generated/downloaded locally)
+data/raw/
+data/synthetic/
+data/processed/*.csv
+data/processed/*.png
 
 # OS generated files
 .DS_Store
