@@ -143,5 +143,14 @@ def main():
         item_mae = mean_absolute_error(y_test_item, item_preds)
         print(f"Overall Option 2 Fallback MAE for {item}: {item_mae:.2f} points")
 
+    # --- Save Final Group Model for Reuse ---
+    import os
+    if not os.path.exists('models'):
+        os.makedirs('models')
+
+    save_path = 'models/readiness_group_model.json'
+    group_model.save_model(save_path)
+    print(f"\n[SUCCESS] Model saved to {save_path} for future reuse.")
+
 if __name__ == "__main__":
     main()

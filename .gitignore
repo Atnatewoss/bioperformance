@@ -21,6 +21,9 @@ data/processed/*.png
 .DS_Store
 Thumbs.db
 
+# Trained model files (generated, can be recreated)
+models/*.json
+
 # IDE
 .vscode/
 .idea/
