@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 
@@ -103,5 +104,6 @@ if __name__ == "__main__":
     final_df = pd.concat(athlete_dfs, ignore_index=True)
     output_path = 'data/processed/features.csv'
     print("Feature Matrix Shape:", final_df.shape)
+    os.makedirs('data/processed', exist_ok=True)
     final_df.to_csv(output_path, index=False)
     print(f"\nSaved processed features to {output_path}")
