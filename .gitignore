@@ -15,6 +15,7 @@ env/
 data/raw/
 data/synthetic/
 data/processed/*.csv
+data/processed/*.json
 data/processed/*.png
 
 # OS generated files
