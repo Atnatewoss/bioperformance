@@ -5,3 +5,4 @@ xgboost==2.0.3
 shap==0.45.0
 matplotlib==3.9.0
 jupyter==1.0.0
+hyperon==0.2.10

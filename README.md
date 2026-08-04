@@ -28,7 +28,9 @@ The pipeline consists of three core components:
 
 2. **XGBoost Model** (`src/readiness_model.py`): A gradient boosting regression model that learns individual athlete patterns. Uses **TimeSeriesSplit** cross-validation with expanding windows to prevent data leakage. A **Group Model** (pooled across all athletes) serves as cold-start fallback for athletes with fewer than 14 days of data. An **Individual Model** activates once sufficient data exists. Supports Option 1 (composite Hooper Index) and Option 2 (separate models per wellness item).
 
-3. **SHAP Explainability** (`src/shap_analysis.py`): Calculates per-feature attributions for every prediction using TreeExplainer. Generates beeswarm (global importance) and waterfall (local decomposition) plots. The top 3 SHAP drivers are extracted to provide actionable, transparent reasoning for coaching staff.
+3. **SHAP Explainability** (`src/shap_analysis.py`): Calculates per-feature attributions for every prediction using TreeExplainer. Runs **per-item** (one SHAP run per wellness-item model, Option 2) and exports the full per-row SHAP dicts to `shap_per_item.json` for the PLN layer.
+
+4. **PLN Explanation Layer** (`src/pln/`): A pure-Python adapter over the MeTTa knowledge base (`pln_rules.metta`, 19 implication rules + 7 threshold facts, all literature-cited). Consumes the SHAP top-3 drivers as facts and runs modus ponens + revision to produce an auditable per-item conclusion (`is_fatigue_elevated`, `is_soreness_elevated`, `is_mood_low`, `is_sleep_poor`) with strength/confidence, capped by prediction severity and athlete data history. Never modifies the trained models or predictions.
 
 ## Methodology
 
@@ -85,9 +87,25 @@ python src/readiness_model.py
 ### 5. SHAP Explainability
 ```bash
 python src/shap_analysis.py
+# OR via CLI (per-item SHAP -> data/processed/shap_per_item.json)
+python src/main.py shap
 ```
 
-### 6. Jupyter Notebook
+### 6. PLN Explanation Layer
+```bash
+# Per-item SHAP -> PLN explanations (console + data/processed/pln_explanations.json)
+python src/main.py explain
+python src/main.py explain --sample 5   # print more examples per item
+```
+
+### 7. Full Pipeline via CLI
+```bash
+python src/main.py train     # train/evaluate XGBoost models
+python src/main.py shap      # per-item SHAP values
+python src/main.py explain   # PLN explanations
+```
+
+### 8. Jupyter Notebook
 ```bash
 jupyter notebook shap_analysis.ipynb
 ```
