@@ -135,6 +135,7 @@ def load_pmdata(raw_dir='data/raw/pmdata_raw'):
     final_df = pd.concat(all_athletes, ignore_index=True)
     final_df['date'] = pd.to_datetime(final_df['date'])
 
+    os.makedirs('data/processed', exist_ok=True)
     final_df.to_csv('data/processed/pmdata_cleaned.csv', index=False, date_format='%Y-%m-%d')
     print(f"\nLoaded PMData for {final_df['athlete_id'].nunique()} athletes ({len(final_df)} rows). Saved to data/processed/pmdata_cleaned.csv")
     return final_df
